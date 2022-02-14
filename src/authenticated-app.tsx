@@ -7,8 +7,10 @@ import { Button, Dropdown, Menu } from "antd";
 
 export const AuthenticatedApp = () => {
   const { logout, user } = useAuth();
+  // const value: any = undefined; //错误边界测试
   return (
     <Container>
+      {/* {value.notExist} //错误边界测试 */}
       <Header between={true}>
         <HeaderLeft gap={true}>
           <SoftwareLogo
