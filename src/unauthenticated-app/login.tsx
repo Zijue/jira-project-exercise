@@ -1,10 +1,9 @@
 import { useAuth } from "context/auth-context";
-import { FormEvent } from "react";
-import { Button, Form, Input } from "antd";
+import { Form, Input } from "antd";
 import { LongButton } from "unauthenticated-app";
 
 export const LoginScreen = () => {
-  const { login, user } = useAuth();
+  const { login } = useAuth();
 
   //   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   //     event.preventDefault(); //阻止表单的默认提交行为

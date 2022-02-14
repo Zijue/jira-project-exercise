@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 
 //!!value 求value的布尔值
 export const isFalsy = (value: unknown) => (value === 0 ? true : !!value);
+export const isVoid = (value: unknown) =>
+  value === undefined || value === null || value === "";
 
 //在一个函数里，改变传入的对象本身是不好的
-export const cleanObject = (object: object) => {
+//此处object使用{[key: string]: unknown}不适用object类型的原因，是因为object不止指代键值对，还可以表示函数
+//而函数是没有办法通过键去取值的
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = Object.assign({}, object);
   Object.keys(result).forEach((key) => {
-    // @ts-ignore
     const value = object[key];
-    if (!isFalsy(value)) {
-      // @ts-ignore
+    if (isVoid(value)) {
       delete result[key];
     }
   });
@@ -21,6 +23,7 @@ export const cleanObject = (object: object) => {
 export const useMount = (callback: () => void) => {
   useEffect(() => {
     callback();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 };
 
