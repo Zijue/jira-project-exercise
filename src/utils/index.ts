@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 //!!value 求value的布尔值
 export const isFalsy = (value: unknown) => (value === 0 ? true : !!value);
@@ -42,9 +42,9 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 };
 
 export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
-  const oldTitle = document.title;
-  //页面加载时：oldTitle === 旧title 'React App'
-  //加载后：oldTitle === 新title
+  const oldTitle = useRef(document.title).current;
+  //页面加载时：oldTitle
+  //加载后：新title
   useEffect(() => {
     document.title = title;
   }, [title]);
@@ -55,5 +55,5 @@ export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
         document.title = oldTitle;
       }
     };
-  }, []);
+  }, [keepOnUnmount, oldTitle]);
 };
