@@ -40,3 +40,20 @@ export const useDebounce = <V>(value: V, delay?: number) => {
 
   return debouncedValue;
 };
+
+export const useDocumentTitle = (title: string, keepOnUnmount = true) => {
+  const oldTitle = document.title;
+  //页面加载时：oldTitle === 旧title 'React App'
+  //加载后：oldTitle === 新title
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  useEffect(() => {
+    return () => {
+      //组件卸载时执行
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+  }, []);
+};
