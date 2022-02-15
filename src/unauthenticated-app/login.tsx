@@ -9,7 +9,7 @@ export const LoginScreen = ({
   onError: (error: Error) => void;
 }) => {
   const { login } = useAuth();
-  const { run, isLoading } = useAsync(undefined, { throwOnError: true });
+  const { isLoading } = useAsync(undefined, { throwOnError: true });
 
   //   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   //     event.preventDefault(); //阻止表单的默认提交行为
@@ -20,15 +20,8 @@ export const LoginScreen = ({
   //     login({ username, password });
   //   };
   //使用antd表单的效果
-  const handleSubmit = async (values: {
-    username: string;
-    password: string;
-  }) => {
-    try {
-      await run(login(values));
-    } catch (e: any) {
-      onError(e);
-    }
+  const handleSubmit = (values: { username: string; password: string }) => {
+    login(values).catch(onError);
   };
   return (
     <Form onFinish={handleSubmit}>
