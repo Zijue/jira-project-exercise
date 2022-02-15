@@ -7,6 +7,7 @@ import { Button, Dropdown, Menu } from "antd";
 import { Navigate, Route, Routes } from "react-router";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ProjectScreen } from "screens/project";
+import { resetRoute } from "utils";
 
 export const AuthenticatedApp = () => {
   // const value: any = undefined; //错误边界测试
@@ -19,6 +20,7 @@ export const AuthenticatedApp = () => {
           <Routes>
             <Route path="/projects" element={<ProjectListScreen />} />
             <Route path="/projects/:projectId/*" element={<ProjectScreen />} />
+            <Route path="/" element={<Navigate to="projects" />} />
           </Routes>
         </Router>
       </Main>
@@ -30,10 +32,12 @@ const PageHeader = () => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
-        <SoftwareLogo
-          width={"18rem"}
-          color={"rgb(38, 132, 255)"}
-        ></SoftwareLogo>
+        <Button type="link" onClick={resetRoute}>
+          <SoftwareLogo
+            width={"18rem"}
+            color={"rgb(38, 132, 255)"}
+          ></SoftwareLogo>
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>
