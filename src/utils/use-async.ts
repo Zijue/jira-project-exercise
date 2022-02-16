@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMountedRef } from "utils";
 
 interface State<D> {
@@ -29,45 +29,51 @@ export const useAsync = <D>(
   // https://codesandbox.io/s/blissful-water-230u4?file=/src/App.js
   const [retry, setRetry] = useState(() => () => {});
   //上面多套一层函数的原因就是useState惰性初始化，保证useState返回的是一个函数()=>{}
-  const setData = (data: D) =>
-    setState({
-      data,
-      stat: "success",
-      error: null,
-    });
-  const setError = (error: Error) =>
-    setState({
-      error,
-      stat: "error",
-      data: null,
-    });
+  const setData = useCallback(
+    (data: D) =>
+      setState({
+        data,
+        stat: "success",
+        error: null,
+      }),
+    []
+  );
+  const setError = useCallback(
+    (error: Error) =>
+      setState({
+        error,
+        stat: "error",
+        data: null,
+      }),
+    []
+  );
   //run 用来触发异步请求
-  const run = (
-    promise: Promise<D>,
-    runConfig?: { retry: () => Promise<D> }
-  ) => {
-    if (!promise || !promise.then) {
-      throw new Error("请传入Promise类型数据");
-    }
-    setRetry(() => () => {
-      if (runConfig?.retry) {
-        run(runConfig?.retry(), runConfig);
+  const run = useCallback(
+    (promise: Promise<D>, runConfig?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error("请传入Promise类型数据");
       }
-    });
-    setState({ ...state, stat: "loading" });
-    return promise
-      .then((data) => {
-        if (mountedRef.current) {
-          setData(data);
+      setRetry(() => () => {
+        if (runConfig?.retry) {
+          run(runConfig?.retry(), runConfig);
         }
-        return data;
-      })
-      .catch((error) => {
-        setError(error);
-        if (config.throwOnError) return Promise.reject(error);
-        return error;
       });
-  };
+      setState((prevState) => ({ ...prevState, stat: "loading" })); //setState的函数用法，用来解决依赖的问题
+      return promise
+        .then((data) => {
+          if (mountedRef.current) {
+            setData(data);
+          }
+          return data;
+        })
+        .catch((error) => {
+          setError(error);
+          if (config.throwOnError) return Promise.reject(error);
+          return error;
+        });
+    },
+    [config.throwOnError, mountedRef, setData, setError]
+  );
   return {
     isIdle: state.stat === "idle",
     isLoading: state.stat === "loading",
