@@ -20,7 +20,6 @@ interface IdSelectProps
  */
 export const IdSelect = (props: IdSelectProps) => {
   const { value, onChange, defaultOptionName, options, ...restProps } = props;
-  console.log("打印options", options);
   return (
     <Select
       value={options?.length ? toNumber(value) : 0}
