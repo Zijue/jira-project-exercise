@@ -39,3 +39,7 @@ export const useProjectModal = () => {
     isLoading,
   };
 };
+export const useProjectsQueryKey = () => {
+  const [params] = useProjectsSearchParams();
+  return ["projects", params];
+};
