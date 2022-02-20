@@ -6,7 +6,8 @@ import { cleanObject } from "utils";
  * 返回页面url中，指定键的参数值
  */
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const setSearchParams = useSetUrlSearchParam();
   return [
     useMemo(
       () =>
@@ -17,12 +18,7 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
       [searchParams]
     ),
     (params: Partial<{ [key in K]: unknown }>) => {
-      //使用Object.fromEntries的原因是因为searchParams是一个iterator
-      const obj = cleanObject({
-        ...Object.fromEntries(searchParams),
-        ...params,
-      }) as URLSearchParamsInit;
-      return setSearchParams(obj);
+      return setSearchParams(params);
     },
   ] as const;
   //此处 as const 有很多妙用
@@ -30,4 +26,14 @@ export const useUrlQueryParam = <K extends string>(keys: K[]) => {
         let a = ['12', 22, true]; // let a: (string | number | boolean)[]
         let b = ['12', 22, true] as const; // let b: readonly ["12", 22, true]
      */
+};
+export const useSetUrlSearchParam = () => {
+  const [searchParams, setSearchParam] = useSearchParams();
+  return (params: { [key in string]: unknown }) => {
+    const o = cleanObject({
+      ...Object.fromEntries(searchParams),
+      ...params,
+    }) as URLSearchParamsInit;
+    return setSearchParam(o);
+  };
 };
