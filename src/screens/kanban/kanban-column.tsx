@@ -50,6 +50,7 @@ const Container = styled.div`
 const TasksContainer = styled.div`
   overflow: scroll;
   flex: 1;
+
   ::-webkit-scrollbar {
     display: none;
   }

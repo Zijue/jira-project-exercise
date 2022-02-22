@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { ScreenContainer } from "components/lib";
 import { useDocumentTitle } from "utils";
 import { useKanbans } from "utils/kanban";
 import { KanbanColumn } from "./kanban-column";
@@ -12,7 +13,7 @@ export const KanbanScreen = () => {
   const { data: kanbans } = useKanbans(useKanbanSearchParams());
 
   return (
-    <div>
+    <ScreenContainer>
       <h1>{currentProject?.name}看板</h1>
       <SearchPanel />
       <ColumnsContainer>
@@ -20,11 +21,11 @@ export const KanbanScreen = () => {
           <KanbanColumn kanban={kanban} key={kanban.id} />
         ))}
       </ColumnsContainer>
-    </div>
+    </ScreenContainer>
   );
 };
-const ColumnsContainer = styled.div`
+const ColumnsContainer = styled("div")`
   display: flex;
-  overflow: hidden;
-  margin-right: 2rem;
+  overflow-x: scroll;
+  flex: 1; //flex: 1 表示填充父元素剩余的部分
 `;
