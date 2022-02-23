@@ -7,7 +7,6 @@ import { useTasksSearchParams } from "./utils";
 
 export const SearchPanel = () => {
   const searchParams = useTasksSearchParams();
-  console.log("搜索面包：", searchParams);
   const setSearchParams = useSetUrlSearchParam();
   const reset = () => {
     setSearchParams({
